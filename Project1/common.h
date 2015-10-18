@@ -1,3 +1,6 @@
+#ifndef __COMMON_H__ 
+#define __COMMON_H__ 
+
 /***
 common.h
 LISP Interpreter Project
@@ -11,3 +14,5 @@ LISP Interpreter Project
 #include <string>
 #include <map>
 #include <cstdlib>
+
+#endif
