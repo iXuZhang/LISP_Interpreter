@@ -1,6 +1,3 @@
-#ifndef __INTERPRETER_H__ 
-#define __INTERPRETER_H__ 
-
 /***
 interpreter.h
 LISP Interpreter Project
@@ -48,5 +45,3 @@ public:
 	void printNode(TreeNode *root, string& res);
 	void printList(TreeNode *root, string& res);
 };
-
-#endif
