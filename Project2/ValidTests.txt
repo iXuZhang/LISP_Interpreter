@@ -1,0 +1,10 @@
+123
+ATE12
+(ATOM . (7. NIL))
+(QUOTE . ((3 . (4 . (5 . NIL))) . NIL))
+(EQ . ( T . ( T . NIL )))
+(EQ . ( NIL . ( NIL . NIL )))
+(PLUS . ( 65 . ( 53 . NIL)))
+(EQ . ( 2 . (( PLUS .( 1 . ( 1. NIL ))). NIL)))
+(NULL . (NIL . NIL))
+(MINUS . ( 25 . ( 53 . NIL)))

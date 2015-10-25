@@ -169,3 +169,239 @@ void Printer::printList(TreeNode *root, string& res){
 	}
 	res += ")";
 }
+
+Evaluator::Evaluator(vector<TreeNode*>& SExpressions){
+	int n = SExpressions.size();
+	for(int i = 0; i < n; i++ )
+		SValues.push_back(eval(SExpressions[i]));
+}
+
+TreeNode* Evaluator::eval(TreeNode* node){
+	if(atom(node)){
+		if(node->val == "T") return node;
+		if(node->val == "NIL") return node;
+		if(INT(node)) return node;
+		cout << "ERROR : Invalid Atom"<<endl;
+		exit(1);
+	}
+	if(car(node)->val == "QUOTE") {
+		if(!null(cdr(cdr(node)))){
+			cout << "ERROR : QUOTE PARAMS GREATER THAN ONE "<<endl;
+			exit(1);
+		}
+		return car(cdr(node));
+	} 
+	if(car(node)->val == "COND") return evcon(cdr(node));
+	return apply(car(node), evlist(cdr(node))); 
+}
+
+bool Evaluator::atom(TreeNode* node){
+	if(!node->left && !node->right) return true;
+	return false;
+}
+
+bool Evaluator::INT(TreeNode* node){
+	string s = node->val;
+	int n = s.size();
+	for(int i = 0; i < n; i++){
+		if(!(s[i] >= '0' && s[i] <= '9'))
+			return false;
+	}
+	return true;
+}
+
+bool Evaluator::null(TreeNode* node){
+	if(!node){
+		cout << "ERROR : NULL "<<endl;
+		exit(1);
+	}
+	if(node->val == "NIL") return true;
+	return false;
+}
+
+TreeNode*  Evaluator::car(TreeNode* node){
+	if(atom(node)){
+		cout << "ERROR : CAR "<<endl;
+		exit(1);
+	}
+	return node->left;
+}
+
+TreeNode* Evaluator::cdr(TreeNode* node){
+	if(!node->right){
+		cout << "ERROR : CDR "<<endl;
+		exit(1);
+	}
+	return node->right;
+}
+
+TreeNode* Evaluator::evcon(TreeNode* node){
+	if(null(node)){
+		cout << "ERROR : NULL "<<endl;
+		exit(1);
+	}
+	if(eval(car(car(node)))) 
+		return eval(car(cdr(node)));
+	return evcon(cdr(node));
+}
+
+TreeNode* Evaluator::evlist(TreeNode* node){
+	if(null(node)) return node;
+	return cons(eval(car(node)), evlist(cdr(node)));
+}
+
+TreeNode* Evaluator::cons(TreeNode* node1, TreeNode* node2){
+	TreeNode* node = new TreeNode(".");
+	node->left = node1;
+	node->right = node2;
+	return node;
+}
+
+TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
+	if(!atom(f)){
+		cout << "ERROR : FUNCTION NAME IS NOT ATOM"<<endl;
+		exit(1);
+	}
+	TreeNode* node = new TreeNode("");
+	if(f->val == "CAR"){
+		if(!null(cdr(x))){
+			cout << "ERROR : CAR PARAMS GREATER THAN ONE "<<endl;
+			exit(1);
+		}
+		if(atom(car(x))){
+			cout << "ERROR : CAR PARAMS IS ATOM "<<endl;
+			exit(1);
+		}
+		return car(car(x));
+	}
+	if(f->val == "CDR"){
+		if(!null(cdr(x))){
+			cout << "ERROR : CDR PARAMS GREATER THAN ONE "<<endl;
+			exit(1);
+		}
+		if(atom(car(x))){
+			cout << "ERROR : CDR PARAMS IS ATOM "<<endl;
+			exit(1);
+		}		
+		return cdr(car(x));
+	} 
+	if(f->val == "CONS"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : CONS PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		return cons(car(x),car(cdr(x)));
+	} 
+	if(f->val == "ATOM"){
+		if(!null(cdr(x))){
+			cout << "ERROR : ATOM PARAMS GREATER THAN ONE "<<endl;
+			exit(1);
+		}
+		node->val = atom(car(x)) ? "T" : "NIL";
+		return node;
+	}
+	if(f->val == "EQ"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : EQ PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		node->val = car(x)->val == car(cdr(x))->val ? "T" : "NIL";
+		return node;		
+	}
+	if(f->val == "INT") {
+		if(!null(cdr(x))){
+			cout << "ERROR : INT PARAMS GREATER THAN ONE "<<endl;
+			exit(1);
+		}
+		node->val = INT(car(x)) ? "T" : "NIL";
+		return node;
+	}
+	if(f->val == "NULL"){
+		if(!null(cdr(x))){
+			cout << "ERROR : NULL PARAMS GREATER THAN ONE "<<endl;
+			exit(1);
+		}		
+		node->val = null(car(x)) ? "T" : "NIL";
+		return node;		
+	}
+	if(f->val == "PLUS"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : PLUS PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		node->val = to_string(a + b);
+		return node;
+	}
+	if(f->val == "MINUS"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : MINUS PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		node->val = to_string(a - b);
+		return node;
+	}
+	if(f->val == "TIMES"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : TIMES PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		node->val = to_string(a * b);
+		return node;		
+	}
+	if(f->val == "QUOTIENT"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : QUOTIENT PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		if(b == 0){
+			cout << "ERROR : Invalid QUOTIENT"<<endl;
+			exit(1);
+		}
+		node->val = to_string(a / b);
+		return node;		
+	}
+	if(f->val == "REMAINDER"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : REMAINDER PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		if(b == 0){
+			cout << "ERROR : Invalid QUOTIENT"<<endl;
+			exit(1);
+		}
+		node->val = to_string(a % b);
+		return node;	
+	}
+	if(f->val == "LESS"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : LESS PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		node->val = a < b ? "T" : "NIL";
+		return node;
+	}
+	if(f->val == "GREATER"){
+		if(!null(cdr(cdr(x)))){
+			cout << "ERROR : GREATER PARAMS GREATER THAN TWO "<<endl;
+			exit(1);
+		}
+		int a = stoi(car(x)->val);
+		int b = stoi(car(cdr(x))->val);
+		node->val = a > b ? "T" : "NIL";
+		return node;
+	}
+	cout << "ERROR : Invalid Function"<<endl;
+	exit(1);
+}

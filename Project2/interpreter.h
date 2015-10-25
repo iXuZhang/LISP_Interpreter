@@ -49,4 +49,20 @@ public:
 	void printList(TreeNode *root, string& res);
 };
 
+class Evaluator{
+public:
+	vector<TreeNode*> SValues;
+	Evaluator(vector<TreeNode*>& SExpressions);
+	TreeNode* eval(TreeNode* node);
+	TreeNode* evcon(TreeNode* node);
+	TreeNode* evlist(TreeNode* node);
+	TreeNode* apply(TreeNode* f, TreeNode* x);
+	TreeNode* car(TreeNode* node);
+	TreeNode* cdr(TreeNode* node);
+	TreeNode* cons(TreeNode* node1, TreeNode* node2);
+	bool atom(TreeNode* node);
+	bool INT(TreeNode* node);
+	bool null(TreeNode* node);
+};
+
 #endif

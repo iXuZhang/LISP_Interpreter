@@ -1,0 +1,7 @@
+ATE12
+(EQ.(1.NIL))
+(EQ.(1.(2.(3. NIL))))
+(PLUS.(1.(2.(3. NIL))))
+(7.NIL)
+(ATOM . 7)
+(NULL . NIL)

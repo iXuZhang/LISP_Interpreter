@@ -12,6 +12,7 @@ using namespace std;
 int main(){
 	Scanner myScanner;
 	Parser myParser(myScanner.tokens);
-	Printer myPrinter(myParser.SExpressions);
+	Evaluator myEvaluator(myParser.SExpressions);
+	Printer myPrinter(myEvaluator.SValues);
 	return 0;
 }
