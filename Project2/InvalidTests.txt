@@ -5,3 +5,4 @@ ATE12
 (7.NIL)
 (ATOM . 7)
 (NULL . NIL)
+(COND.((T.(NIL.(NIL.NIL))).NIL))

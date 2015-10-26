@@ -61,8 +61,8 @@ public:
 	TreeNode* cdr(TreeNode* node);
 	TreeNode* cons(TreeNode* node1, TreeNode* node2);
 	bool atom(TreeNode* node);
-	bool INT(TreeNode* node);
 	bool null(TreeNode* node);
+	bool INT(TreeNode* node);
 };
 
 #endif
