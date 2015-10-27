@@ -8,4 +8,4 @@ ATE12
 (EQ . ( 2 . (( PLUS .( 1 . ( 1. NIL ))). NIL)))
 (NULL . (NIL . NIL))
 (MINUS . ( 25 . ( 53 . NIL)))
-(COND.((T.(NIL.NIL)).NIL))
+(COND.((T.(5.NIL)).NIL))

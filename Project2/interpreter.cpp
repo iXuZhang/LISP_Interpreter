@@ -240,13 +240,16 @@ TreeNode* Evaluator::evcon(TreeNode* node){
 		cout << "ERROR : NULL "<<endl;
 		exit(1);
 	}
-	if(eval(car(car(node)))->val == "T"){
-		if(!null(cdr(cdr(car(node))))){
-			cout << "ERROR : COND PARAMS GREATER THAN TWO"<<endl;
-			exit(1);
-		}
-		return eval(car(cdr(car(node))));
+	if(!null(cdr(cdr(car(node))))){
+		cout << "ERROR : COND PARAMS GREATER THAN TWO"<<endl;
+		exit(1);
 	}
+	if(eval(car(car(node)))->val != "T" && eval(car(car(node)))->val != "NIL"){
+		cout << "ERROR : COND PARAMS IS NOT BOOL"<<endl;
+		exit(1);		
+	}
+	if(eval(car(car(node)))->val == "T")
+		return eval(car(cdr(car(node))));
 	return evcon(cdr(node));
 }
 
