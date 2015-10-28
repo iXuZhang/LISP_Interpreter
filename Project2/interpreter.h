@@ -63,6 +63,7 @@ public:
 	bool atom(TreeNode* node);
 	bool null(TreeNode* node);
 	bool INT(TreeNode* node);
+	void bondCheck(TreeNode* node);
 };
 
 #endif

@@ -191,7 +191,10 @@ TreeNode* Evaluator::eval(TreeNode* node){
 		}
 		return car(cdr(node));
 	} 
-	if(car(node)->val == "COND") return evcon(cdr(node));
+	if(car(node)->val == "COND"){
+		bondCheck(cdr(node));
+		return evcon(cdr(node));
+	} 
 	return apply(car(node), evlist(cdr(node))); 
 }
 
@@ -204,7 +207,7 @@ bool Evaluator::INT(TreeNode* node){
 	string s = node->val;
 	int n = s.size();
 	for(int i = 0; i < n; i++){
-		if(!(s[i] >= '0' && s[i] <= '9'))
+		if(!((s[i] >= '0' && s[i] <= '9') || (i == 0 && s[i] == '-')))
 			return false;
 	}
 	return true;
@@ -235,13 +238,18 @@ TreeNode* Evaluator::cdr(TreeNode* node){
 	return node->right;
 }
 
+void Evaluator::bondCheck(TreeNode* node){
+	if(null(node)) return;
+	if(!null(cdr(cdr(car(node))))){
+		cout << "ERROR : COND PARAMS GREATER THAN TWO"<<endl;
+		exit(1);
+	}
+	bondCheck(cdr(node));
+}
+
 TreeNode* Evaluator::evcon(TreeNode* node){
 	if(null(node)){
 		cout << "ERROR : NULL "<<endl;
-		exit(1);
-	}
-	if(!null(cdr(cdr(car(node))))){
-		cout << "ERROR : COND PARAMS GREATER THAN TWO"<<endl;
 		exit(1);
 	}
 	if(eval(car(car(node)))->val != "T" && eval(car(car(node)))->val != "NIL"){
@@ -313,6 +321,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : EQ PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
 		}
+		if(!atom(car(x)) || !atom(car(cdr(x)))){
+			cout << "ERROR : EQ PARAMS ARE NOT ATOM "<<endl;
+			exit(1);			
+		}
 		node->val = car(x)->val == car(cdr(x))->val ? "T" : "NIL";
 		return node;		
 	}
@@ -337,6 +349,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : PLUS PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
 		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : PLUS PARAMS ARE NOT INT"<<endl;
+			exit(1);			
+		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
 		node->val = to_string(a + b);
@@ -346,6 +362,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 		if(!null(cdr(cdr(x)))){
 			cout << "ERROR : MINUS PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
+		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : MINUS PARAMS ARE NOT INT"<<endl;
+			exit(1);			
 		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
@@ -357,6 +377,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : TIMES PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
 		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : TIMES PARAMS ARE NOT INT"<<endl;
+			exit(1);			
+		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
 		node->val = to_string(a * b);
@@ -366,6 +390,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 		if(!null(cdr(cdr(x)))){
 			cout << "ERROR : QUOTIENT PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
+		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : QUOTIENT PARAMS ARE NOT INT"<<endl;
+			exit(1);			
 		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
@@ -381,6 +409,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : REMAINDER PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
 		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : REMAINDER PARAMS ARE NOT INT"<<endl;
+			exit(1);			
+		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
 		if(b == 0){
@@ -395,6 +427,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : LESS PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
 		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : LESS PARAMS ARE NOT INT"<<endl;
+			exit(1);			
+		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
 		node->val = a < b ? "T" : "NIL";
@@ -404,6 +440,10 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 		if(!null(cdr(cdr(x)))){
 			cout << "ERROR : GREATER PARAMS GREATER THAN TWO "<<endl;
 			exit(1);
+		}
+		if(!(INT(car(x)) && INT(car(cdr(x))))){
+			cout << "ERROR : GREATER PARAMS ARE NOT INT"<<endl;
+			exit(1);			
 		}
 		int a = stoi(car(x)->val);
 		int b = stoi(car(cdr(x))->val);
