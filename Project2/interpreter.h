@@ -60,6 +60,8 @@ public:
 	TreeNode* car(TreeNode* node);
 	TreeNode* cdr(TreeNode* node);
 	TreeNode* cons(TreeNode* node1, TreeNode* node2);
+	string myto_string(int num);
+	int mystoi(string s);
 	bool atom(TreeNode* node);
 	bool null(TreeNode* node);
 	bool INT(TreeNode* node);

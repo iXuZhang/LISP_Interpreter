@@ -222,6 +222,36 @@ bool Evaluator::null(TreeNode* node){
 	return false;
 }
 
+int Evaluator::mystoi(string s){
+	int res = 0;
+	int flag = 1;
+	int i = 0;
+	if(s[i] == '-'){
+		i++;
+		flag = -1;
+	} 
+	int n = s.size();
+	for (; i < n; i++)
+        res = res*10 + (s[i] - '0');
+    return res*flag;
+}
+
+string Evaluator::myto_string(int n){
+	string res;
+	string flag;
+	if(n == 0) return "0";
+	if(n < 0){
+		flag = '-';
+		n = -n;
+	}
+	while(n > 0){
+		res = char(n%10 + '0') + res;
+		n /= 10;
+	}
+	return flag + res;
+}
+
+
 TreeNode*  Evaluator::car(TreeNode* node){
 	if(atom(node)){
 		cout << "ERROR : CAR "<<endl;
@@ -353,9 +383,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : PLUS PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
-		node->val = to_string(a + b);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
+		node->val = myto_string(a + b);
 		return node;
 	}
 	if(f->val == "MINUS"){
@@ -367,9 +397,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : MINUS PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
-		node->val = to_string(a - b);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
+		node->val = myto_string(a - b);
 		return node;
 	}
 	if(f->val == "TIMES"){
@@ -381,9 +411,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : TIMES PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
-		node->val = to_string(a * b);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
+		node->val = myto_string(a * b);
 		return node;		
 	}
 	if(f->val == "QUOTIENT"){
@@ -395,13 +425,13 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : QUOTIENT PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
 		if(b == 0){
 			cout << "ERROR : Invalid QUOTIENT"<<endl;
 			exit(1);
 		}
-		node->val = to_string(a / b);
+		node->val = myto_string(a / b);
 		return node;		
 	}
 	if(f->val == "REMAINDER"){
@@ -413,13 +443,13 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : REMAINDER PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
 		if(b == 0){
 			cout << "ERROR : Invalid QUOTIENT"<<endl;
 			exit(1);
 		}
-		node->val = to_string(a % b);
+		node->val = myto_string(a % b);
 		return node;	
 	}
 	if(f->val == "LESS"){
@@ -431,8 +461,8 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : LESS PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
 		node->val = a < b ? "T" : "NIL";
 		return node;
 	}
@@ -445,8 +475,8 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : GREATER PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = stoi(car(x)->val);
-		int b = stoi(car(cdr(x))->val);
+		int a = mystoi(car(x)->val);
+		int b = mystoi(car(cdr(x))->val);
 		node->val = a > b ? "T" : "NIL";
 		return node;
 	}
