@@ -40,7 +40,7 @@ public:
 	TreeNode* parseSexp(vector<string> &tokens, int& i);
 };
 
-// A printer a print in List notation or Node notation
+// A printer to print in List notation or Node notation
 class Printer{
 public:
 	Printer(vector<TreeNode*>& SExpressions);
