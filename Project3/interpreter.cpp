@@ -2,7 +2,7 @@
 Interpreter.cpp
 LISP Interpreter Project
 @Author Xu Zhang
-10/02/2015
+11/05/2015
 ***/
  
 #include "interpreter.h"
@@ -159,7 +159,7 @@ void Printer::printList(TreeNode *root, string& res){
 	if(!root->left && !root->right){
 		res += root->val;
 		return;
-}
+	}
 	res += "(";
 	printList(root->left, res);	
 	while(root->right->val != "NIL"){
@@ -172,16 +172,25 @@ void Printer::printList(TreeNode *root, string& res){
 
 Evaluator::Evaluator(vector<TreeNode*>& SExpressions){
 	int n = SExpressions.size();
-	for(int i = 0; i < n; i++ )
-		SValues.push_back(eval(SExpressions[i]));
+	map<string,TreeNode*> a;
+	map<string,TreeNode*> d;
+	for(int i = 0; i < n; i++ ){
+		TreeNode* curr = eval(SExpressions[i], a, d);
+		if(curr) SValues.push_back(curr);
+	}
 }
 
-TreeNode* Evaluator::eval(TreeNode* node){
+TreeNode* Evaluator::eval(TreeNode* node, map<string,TreeNode*> a, map<string,TreeNode*>& d){
 	if(atom(node)){
-		if(node->val == "T") return node;
-		if(node->val == "NIL") return node;
-		if(INT(node)) return node;
-		cout << "ERROR : Invalid Atom"<<endl;
+		if(node->val == "T")
+			return copy(node);
+		if(node->val == "NIL")
+			return copy(node);
+		if(INT(node))
+			return copy(node);
+		if(a.count(node->val) > 0)
+			return copy(a[node->val]);
+		cout << "ERROR : Invalid Atom in Eval"<<endl;
 		exit(1);
 	}
 	if(car(node)->val == "QUOTE") {
@@ -193,17 +202,33 @@ TreeNode* Evaluator::eval(TreeNode* node){
 	} 
 	if(car(node)->val == "COND"){
 		bondCheck(cdr(node));
-		return evcon(cdr(node));
-	} 
-	return apply(car(node), evlist(cdr(node))); 
+		return evcon(cdr(node), a, d);
+	}
+	if(car(node)->val == "DEFUN"){
+		if(!null(cdr(cdr(cdr(cdr(node)))))){
+			cout << "ERROR : DEFUN PARAMS GREATER ARE MORE THAN THREE "<<endl;
+			exit(1);
+		}
+		d[car(cdr(node))->val] = cdr(cdr(node));
+		return NULL;
+	}
+	return apply(car(node), evlist(cdr(node),a,d), a, d); 
 }
 
 bool Evaluator::atom(TreeNode* node){
+	if(!node){
+		cout << "ERROR : NULL "<<endl;
+		exit(1);		
+	}
 	if(!node->left && !node->right) return true;
 	return false;
 }
 
 bool Evaluator::INT(TreeNode* node){
+	if(!node){
+		cout << "ERROR : NULL "<<endl;
+		exit(1);		
+	}
 	string s = node->val;
 	int n = s.size();
 	for(int i = 0; i < n; i++){
@@ -251,8 +276,19 @@ string Evaluator::myto_string(int n){
 	return flag + res;
 }
 
+TreeNode* Evaluator::copy(TreeNode* node){
+	if(!node) return NULL;
+	TreeNode* newnode = new TreeNode(node->val);
+	newnode->left = copy(node->left);
+	newnode->right = copy(node->right);
+	return newnode;
+}
 
-TreeNode*  Evaluator::car(TreeNode* node){
+TreeNode* Evaluator::car(TreeNode* node){
+	if(!node){
+		cout << "ERROR : NULL "<<endl;
+		exit(1);		
+	}
 	if(atom(node)){
 		cout << "ERROR : CAR "<<endl;
 		exit(1);
@@ -261,6 +297,10 @@ TreeNode*  Evaluator::car(TreeNode* node){
 }
 
 TreeNode* Evaluator::cdr(TreeNode* node){
+	if(!node){
+		cout << "ERROR : NULL "<<endl;
+		exit(1);		
+	}
 	if(!node->right){
 		cout << "ERROR : CDR "<<endl;
 		exit(1);
@@ -277,23 +317,23 @@ void Evaluator::bondCheck(TreeNode* node){
 	bondCheck(cdr(node));
 }
 
-TreeNode* Evaluator::evcon(TreeNode* node){
+TreeNode* Evaluator::evcon(TreeNode* node, map<string,TreeNode*> a, map<string,TreeNode*>& d){
 	if(null(node)){
 		cout << "ERROR : NULL "<<endl;
 		exit(1);
 	}
-	if(eval(car(car(node)))->val != "T" && eval(car(car(node)))->val != "NIL"){
+	if(eval(car(car(node)), a, d)->val != "T" && eval(car(car(node)), a, d)->val != "NIL"){
 		cout << "ERROR : COND PARAMS IS NOT BOOL"<<endl;
 		exit(1);		
 	}
-	if(eval(car(car(node)))->val == "T")
-		return eval(car(cdr(car(node))));
-	return evcon(cdr(node));
+	if(eval(car(car(node)), a, d)->val == "T")
+		return eval(car(cdr(car(node))), a, d);
+	return evcon(cdr(node), a, d);
 }
 
-TreeNode* Evaluator::evlist(TreeNode* node){
-	if(null(node)) return node;
-	return cons(eval(car(node)), evlist(cdr(node)));
+TreeNode* Evaluator::evlist(TreeNode* x, map<string,TreeNode*> a, map<string,TreeNode*>& d){
+	if(null(x)) return copy(x);
+	return cons(eval(car(x), a, d), evlist(cdr(x), a, d));
 }
 
 TreeNode* Evaluator::cons(TreeNode* node1, TreeNode* node2){
@@ -303,8 +343,21 @@ TreeNode* Evaluator::cons(TreeNode* node1, TreeNode* node2){
 	return node;
 }
 
-TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
+void Evaluator::addpairs(TreeNode* node, TreeNode* x, map<string,TreeNode*>& a, map<string,TreeNode*>& d){
+	if(null(node) && null(x)) return;
+	if(null(node) || null(x) || !atom(car(node))){
+		cout << "ERROR : ADDPAIRS" <<endl;
+		exit(1);
+	}
+	a[car(node)->val] = car(x);
+	addpairs(cdr(node), cdr(x), a, d);
+}
+
+TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x, map<string,TreeNode*> a, map<string,TreeNode*>& d){
 	if(!atom(f)){
+		vector<TreeNode*> temp;
+		temp.push_back(f);
+		Printer myPrinter(temp);
 		cout << "ERROR : FUNCTION NAME IS NOT ATOM"<<endl;
 		exit(1);
 	}
@@ -383,9 +436,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : PLUS PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		node->val = myto_string(a + b);
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		node->val = myto_string(b + c);
 		return node;
 	}
 	if(f->val == "MINUS"){
@@ -397,9 +450,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : MINUS PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		node->val = myto_string(a - b);
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		node->val = myto_string(b - c);
 		return node;
 	}
 	if(f->val == "TIMES"){
@@ -411,9 +464,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : TIMES PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		node->val = myto_string(a * b);
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		node->val = myto_string(b * c);
 		return node;		
 	}
 	if(f->val == "QUOTIENT"){
@@ -425,13 +478,13 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : QUOTIENT PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		if(b == 0){
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		if(c == 0){
 			cout << "ERROR : Invalid QUOTIENT"<<endl;
 			exit(1);
 		}
-		node->val = myto_string(a / b);
+		node->val = myto_string(b / c);
 		return node;		
 	}
 	if(f->val == "REMAINDER"){
@@ -443,13 +496,13 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : REMAINDER PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		if(b == 0){
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		if(c == 0){
 			cout << "ERROR : Invalid QUOTIENT"<<endl;
 			exit(1);
 		}
-		node->val = myto_string(a % b);
+		node->val = myto_string(b % c);
 		return node;	
 	}
 	if(f->val == "LESS"){
@@ -461,9 +514,9 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : LESS PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		node->val = a < b ? "T" : "NIL";
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		node->val = b < c ? "T" : "NIL";
 		return node;
 	}
 	if(f->val == "GREATER"){
@@ -475,11 +528,11 @@ TreeNode* Evaluator::apply(TreeNode* f, TreeNode* x){
 			cout << "ERROR : GREATER PARAMS ARE NOT INT"<<endl;
 			exit(1);			
 		}
-		int a = mystoi(car(x)->val);
-		int b = mystoi(car(cdr(x))->val);
-		node->val = a > b ? "T" : "NIL";
+		int b = mystoi(car(x)->val);
+		int c = mystoi(car(cdr(x))->val);
+		node->val = b > c ? "T" : "NIL";
 		return node;
 	}
-	cout << "ERROR : Invalid Function"<<endl;
-	exit(1);
+	addpairs(car(d[f->val]), x, a, d);
+	return eval(car(cdr(d[f->val])), a, d);
 }

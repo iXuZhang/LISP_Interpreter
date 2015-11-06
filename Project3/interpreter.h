@@ -5,7 +5,7 @@
 interpreter.h
 LISP Interpreter Project
 @Author Xu Zhang
-10/02/2015
+11/05/2015
 ***/
 
 #include "common.h"
@@ -53,12 +53,13 @@ class Evaluator{
 public:
 	vector<TreeNode*> SValues;
 	Evaluator(vector<TreeNode*>& SExpressions);
-	TreeNode* eval(TreeNode* node);
-	TreeNode* evcon(TreeNode* node);
-	TreeNode* evlist(TreeNode* node);
-	TreeNode* apply(TreeNode* f, TreeNode* x);
+	TreeNode* eval(TreeNode* node, map<string,TreeNode*> a, map<string,TreeNode*>& d);
+	TreeNode* evcon(TreeNode* node, map<string,TreeNode*> a, map<string,TreeNode*>& d);
+	TreeNode* evlist(TreeNode* node, map<string,TreeNode*> a, map<string,TreeNode*>& d);
+	TreeNode* apply(TreeNode* f, TreeNode* x, map<string,TreeNode*> a, map<string,TreeNode*>& d);
 	TreeNode* car(TreeNode* node);
 	TreeNode* cdr(TreeNode* node);
+	TreeNode* copy(TreeNode* node);
 	TreeNode* cons(TreeNode* node1, TreeNode* node2);
 	string myto_string(int num);
 	int mystoi(string s);
@@ -66,6 +67,7 @@ public:
 	bool null(TreeNode* node);
 	bool INT(TreeNode* node);
 	void bondCheck(TreeNode* node);
+	void addpairs(TreeNode* node, TreeNode* x, map<string,TreeNode*>& a, map<string, TreeNode*>& d);
 };
 
 #endif
