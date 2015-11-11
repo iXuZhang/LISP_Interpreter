@@ -10,3 +10,5 @@
 (DEFUN . (G . ((Y . NIL) . ((PLUS . ((F . (10 . (5 . NIL))) . (Y . NIL))) . NIL))))
 (G . (5 . NIL))
 (G . ((G . (5 . NIL)) . NIL))
+(CONS . ((QUOTE . (A . NIL)) . ((QUOTE . ((B . (C . NIL)) . NIL)) . NIL)))
+(COND . (((QUOTE . (NIL . NIL)) . (23 . NIL)) . ((T . ((CONS . (5 . (6 . NIL))) . NIL)) . NIL)))
