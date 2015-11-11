@@ -67,6 +67,7 @@ public:
 	bool null(TreeNode* node);
 	bool INT(TreeNode* node);
 	void bondCheck(TreeNode* node);
+	bool defunCheck(TreeNode* node);
 	void addpairs(TreeNode* node, TreeNode* x, map<string,TreeNode*>& a, map<string, TreeNode*>& d);
 };
 

@@ -3,3 +3,8 @@
 (DEFUN . (F . (X . NIL)))
 (DEFUN . (F . NIL))
 (DEFUN . NIL)
+(DEFUN . (F . ((X . (X . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
+(DEFUN . (INT . ((X . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
+(DEFUN . (F . ((T . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
+(DEFUN . (F . ((12 . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
+(DEFUN . (F . ((NIL . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
