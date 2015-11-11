@@ -345,7 +345,7 @@ TreeNode* Evaluator::cons(TreeNode* node1, TreeNode* node2){
 
 void Evaluator::addpairs(TreeNode* node, TreeNode* x, map<string,TreeNode*>& a, map<string,TreeNode*>& d){
 	if(null(node) && null(x)) return;
-	if(null(node) || null(x) || !atom(car(node))){
+	if(null(node) || null(x) || !atom(car(node)) || INT(car(node))){
 		cout << "ERROR : ADDPAIRS" <<endl;
 		exit(1);
 	}

@@ -1,0 +1,5 @@
+(DEFUN . (F . ((12 . (Y . NIL)) . ((PLUS . (X . (Z . NIL))) . NIL))))
+(DEFUN . (F . (X . (Y . ((PLUS . (X . (Y . NIL))) . NIL)))))
+(DEFUN . (F . (X . NIL)))
+(DEFUN . (F . NIL))
+(DEFUN . NIL)
