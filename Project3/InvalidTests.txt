@@ -8,3 +8,5 @@
 (DEFUN . (F . ((T . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
 (DEFUN . (F . ((12 . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
 (DEFUN . (F . ((NIL . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
+(DEFUN . (EQ . ((X . (Y . NIL)) . ((PLUS . (X . (Y . NIL))) . NIL))))
+(DEFUN . (H . ((NIL.NIL) . ((PLUS . (1 . (1 . NIL))) . NIL))))

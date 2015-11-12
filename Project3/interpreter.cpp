@@ -210,7 +210,8 @@ TreeNode* Evaluator::eval(TreeNode* node, map<string,TreeNode*> a, map<string,Tr
 			exit(1);
 		}
 		d[car(cdr(node))->val] = cdr(cdr(node));
-		return NULL;
+		TreeNode* funName = new TreeNode(car(cdr(node))->val);
+		return funName;
 	}
 	return apply(car(node), evlist(cdr(node),a,d), a, d); 
 }
@@ -221,9 +222,9 @@ bool Evaluator::defunCheck(TreeNode* node){
 	if(car(curr)->val == "CAR" || car(curr)->val  == "CDR" || car(curr)->val  == "EQ" || car(curr)->val  == "CONS") return false;
 	if(car(curr)->val == "ATOM" || car(curr)->val  == "NULL" || car(curr)->val  == "INT" || car(curr)->val  == "MINUS") return false;
 	if(car(curr)->val == "TIMES" || car(curr)->val  == "GREATER" || car(curr)->val  == "LESS" || car(curr)->val  == "QUOTIENT") return false;
-	if(car(curr)->val == "REMAINDER" || car(curr)->val  == "TIMES" ) return false;
+	if(car(curr)->val == "REMAINDER" || car(curr)->val  == "TIMES" ||  car(curr)->val  == "PLUS") return false;
 	curr = car(cdr(curr));
-	if(atom(curr)) return false;
+	if(!null(curr) && atom(curr)) return false;
 	set<string> table;
 	while(!null(curr)){
 		if(!atom(car(curr)) || INT(car(curr)) ||car(curr)->val == "T" || car(curr)->val == "NIL") return false;
