@@ -1,14 +1,15 @@
-MEM
-H
 T
 NIL
-NIL
-MEM
-UNI
-(2 3 5 1 4)
-(1 2 3 4)
-F
-G
-20
-35
-2
+123
+(INT (CONS 4 5))
+(INT (PLUS 4 5))
+(ATOM 7)
+(PLUS 65 53)
+(PLUS 5 6)
+(PLUS 8 6)
+(LESS 4 8)
+(EQ 2 (PLUS 1 1))
+(ATOM 4)
+(EQ 5 5)
+(EQ 5 6)
+(NULL NIL)

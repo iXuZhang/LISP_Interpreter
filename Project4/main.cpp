@@ -4,7 +4,7 @@ main.cpp
 11/16/2015
 ***/
 
-#include "interpreter.h"
+#include "typechecker.h"
 
 using namespace std;
 

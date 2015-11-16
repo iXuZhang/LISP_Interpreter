@@ -1,1 +1,15 @@
-(DEFUN . (H . ((NIL.NIL) . ((PLUS . (1 . (1 . NIL))) . NIL))))
+T
+NIL
+123
+(INT . ((CONS . (4 . (5 . NIL))) . NIL))
+(INT . ((PLUS . (4 . (5 . NIL))) . NIL))
+(ATOM . (7. NIL))
+(PLUS . ( 65 . ( 53 . NIL)))
+(PLUS . (5 . (6 . NIL)))
+(PLUS . (8 . (6 . NIL)))
+(LESS . (4 . (8 . NIL)))
+(EQ . ( 2 . (( PLUS .( 1 . ( 1. NIL ))). NIL)))
+(ATOM . (4. NIL))
+(EQ . (5 . (5 . NIL)))
+(EQ . (5 . (6 . NIL)))
+(NULL . (NIL . NIL))
