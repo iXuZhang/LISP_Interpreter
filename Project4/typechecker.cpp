@@ -1,11 +1,11 @@
 /***
-Interpreter.cpp
+typechecker.cpp
 LISP Interpreter Project
 @Author Xu Zhang
-11/05/2015
+11/16/2015
 ***/
  
-#include "interpreter.h"
+#include "typechecker.h"
 
 using namespace std;
 

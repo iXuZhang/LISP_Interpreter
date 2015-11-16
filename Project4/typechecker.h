@@ -1,11 +1,10 @@
-#ifndef __INTERPRETER_H__ 
-#define __INTERPRETER_H__ 
+#ifndef __TYPECHECKER_H__ 
+#define __TYPECHECKER_H__ 
 
 /***
-interpreter.h
-LISP Interpreter Project
+typechecker.h
 @Author Xu Zhang
-11/05/2015
+11/16/2015
 ***/
 
 #include "common.h"
@@ -49,7 +48,8 @@ public:
 	void printList(TreeNode *root, string& res);
 };
 
-class Evaluator{
+// A typechecker to do tpye check
+class Typechecker{
 public:
 	vector<TreeNode*> SValues;
 	Evaluator(vector<TreeNode*>& SExpressions);
@@ -59,7 +59,6 @@ public:
 	TreeNode* apply(TreeNode* f, TreeNode* x, map<string,TreeNode*> a, map<string,TreeNode*>& d);
 	TreeNode* car(TreeNode* node);
 	TreeNode* cdr(TreeNode* node);
-	TreeNode* copy(TreeNode* node);
 	TreeNode* cons(TreeNode* node1, TreeNode* node2);
 	string myto_string(int num);
 	int mystoi(string s);
@@ -68,7 +67,6 @@ public:
 	bool INT(TreeNode* node);
 	void bondCheck(TreeNode* node);
 	bool defunCheck(TreeNode* node);
-	void addpairs(TreeNode* node, TreeNode* x, map<string,TreeNode*>& a, map<string, TreeNode*>& d);
 };
 
 #endif
