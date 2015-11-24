@@ -1,16 +1,16 @@
 Xu Zhang
 
 8 kinds of type check ERRORs:
-ERROR : Empty input                     // No input
-ERROR : Incompleted Input  				// such as ((A.B
-ERROR : Lower Letters      				// such as (a.B)
-ERROR : Ivalid Iput        				// such as  %#$
-ERROR : Mixed Number and Letter 		// such as 123A
-ERROR : Lack Atom or Opening Parentheses// such as (A.)
-ERROR : Lack Dot	   		    		// such as (A B)
-ERROR : Lack Closing Parentheses		// such as (A.B.A)
+ERROR : Invalid Atom
+ERROR : COND TYPE
+ERROR : CAR TYPE 
+ERROR : CDR TYPE
+ERROR : CONS TYPE
+ERROR : EQ/LESS TYPE
+ERROR : NULL TYPE 
+ERROR : PLUS LESS TYPE
 
-The project includes four class(Parser, Scanner)and a Struct(TreeNode).
+The project includes three class(Parser, Scanner, Typechecker)and a Struct(TreeNode).
 
 Scanner includes two function getAllTokens and getNextToken. And they will throw different Errors according to different invalid input.
 

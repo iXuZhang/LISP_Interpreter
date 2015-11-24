@@ -193,7 +193,7 @@ string Typechecker::checker(TreeNode* node){
 		const int n = types.size();
 		for(int i = 1; i < n; i++)
 			if(types[0] != types[i]){
-				cout << " ERROR : COND TYPE "<<endl;
+				cout << "ERROR : COND TYPE "<<endl;
 				exit(1);
 			}
 		return types[0];
@@ -265,15 +265,11 @@ string Typechecker::checker(TreeNode* node){
 
 void Typechecker::condCheck(TreeNode* node, vector<string>& types){
 	if(null(node)) return;
-	if(!null(cdr(cdr(car(node))))){
-		cout << "ERROR : COND PARAMS GREATER THAN TWO"<<endl;
-		exit(1);
-	}
 	if(checker(car(car(node))) != "Bool"){
 		cout << "ERROR : COND PARAMS GREATER THAN TWO"<<endl;
 		exit(1);
 	}
-	types.push_back(checker(cdr(car(node))));
+	types.push_back(checker(car(cdr(car(node)))));
 	condCheck(cdr(node), types);
 }
 
